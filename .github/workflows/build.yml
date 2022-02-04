@@ -42,9 +42,6 @@ jobs:
     - name: Install Python dependencies
       run: |
         pip install .
-    - name: Download ConferenceCorpus Data
-      run: |
-        python ./scripts/download_dblp.py
     - name: Run tests
       run: |
         python -m unittest discover
