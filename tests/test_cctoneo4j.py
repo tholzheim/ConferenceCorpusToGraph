@@ -23,8 +23,8 @@ class TestCc2neo4j(Basetest):
         confRef2Graph.addDblpSeriesRelation()
 
         dblp2Graph = DblpEvent(graph=graph)
-        dblp2Graph.debug=debug # Show stats of added relations
         dblp2Graph.addAllEvents(limit=1000)
+        dblp2Graph.debug = debug  # Show stats of added relations
         dblp2Graph.addLocationRelation()
         dblp2Graph.addSeriesRelation()
 

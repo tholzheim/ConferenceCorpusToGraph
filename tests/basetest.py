@@ -14,6 +14,7 @@ import os
 
 from corpus.datasources.download import Download
 from corpus.eventcorpus import EventCorpus
+from corpus.lookup import CorpusLookup, CorpusLookupConfigure
 from wikibot.wikiuser import WikiUser
 from wikifile.wikiFileManager import WikiFileManager
 
@@ -22,6 +23,7 @@ class Basetest(TestCase):
     '''
     base test case
     '''
+
     
     def setUp(self,debug=False,profile=True):
         '''
@@ -35,7 +37,6 @@ class Basetest(TestCase):
         self.ensureWikiUserExist()
         RawDataSources.downloadDblp(onlySample=True, forceUpdate=False)
         EventCorpus.download()
-
 
     def ensureWikiUserExist(self):
         self.getWikiUser("or")

@@ -1,3 +1,7 @@
+import io
+from contextlib import redirect_stdout
+from typing import Callable
+
 from alive_progress import alive_it
 from lodstorage.lod import LOD
 from py2neo import Graph
@@ -51,7 +55,9 @@ class GraphMapper(object):
 
 	def getEvents(self):
 		corpus = CorpusLookup(configure=CorpusLookupConfigure.configureCorpusLookup)
-		corpus.load(forceUpdate=False)
+		output=self.captureOutput(corpus.load, forceUpdate=False) # reduces debug output
+		if self.debug:
+			print(output)
 		datasource = corpus.getDataSource(self.SOURCE_ID)
 		events = datasource.eventManager.getList()
 		return events
@@ -69,6 +75,23 @@ class GraphMapper(object):
 		"""
 		qres = self.runQuery(query)
 		return qres
+
+	@staticmethod
+	def captureOutput(fn: Callable, *args, **kwargs) -> str:
+		"""
+        Captures stdout put of the given function
+
+        Args:
+            fn(callable): function to call
+        Returns:
+            str
+        """
+		f = io.StringIO()
+		with redirect_stdout(f):
+			fn(*args, **kwargs)
+		f.seek(0)
+		output = f.read()
+		return output
 
 
 
