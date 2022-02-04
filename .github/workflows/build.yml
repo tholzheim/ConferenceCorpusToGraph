@@ -22,9 +22,6 @@ jobs:
       neo4j:
         # Docker Hub image
         image: neo4j:4.4.3-community
-        options: >-
-          --publish "7474:7474"
-          --publish "7687:7687"
         env:
           NEO4J_AUTH: none
         ports:
