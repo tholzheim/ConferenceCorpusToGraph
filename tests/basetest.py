@@ -3,11 +3,13 @@ Created on 2021-08-19
 
 @author: wf
 '''
+from os.path import expanduser
 from unittest import TestCase
 import time
 import getpass
 import os
 
+from corpus.datasources.download import Download
 from corpus.eventcorpus import EventCorpus
 from wikibot.wikiuser import WikiUser
 from wikifile.wikiFileManager import WikiFileManager
@@ -28,6 +30,7 @@ class Basetest(TestCase):
         msg=f"test {self._testMethodName}, debug={self.debug}"
         self.profiler=Profiler(msg,profile=self.profile)
         self.ensureWikiUserExist()
+        RawDataSources.downloadDblp(onlySample=True, forceUpdate=False)
         EventCorpus.download()
 
 
@@ -121,3 +124,29 @@ class Profiler:
         if self.profile:
             print(f"{self.msg}{extraMsg} took {elapsed:5.1f} s")
         return elapsed
+
+class RawDataSources:
+    """
+    Manages the download of raw datasources that are needed to init the ConferenceCorpus
+    """
+
+    @classmethod
+    def downloadDblp(cls, onlySample:bool=True, forceUpdate:bool=False):
+        """
+        download the dblp xml dump
+        Args:
+             onlySample(bool): If False the complete xml dump is downloaded (~4GB). Otherwise only a sample is downloaded.
+             forceUpdate(bool): If True the file will be downloaded even if already existent
+        """
+        sampleUrl = "https://github.com/WolfgangFahl/ConferenceCorpus/wiki/data/dblpsample.xml.gz"
+        dumpUrl = "https://dblp.uni-trier.de/xml/dblp.xml.gz"
+        if onlySample:
+            url=sampleUrl
+        else:
+            url = dumpUrl
+        home = expanduser("~")
+        Download.downloadBackupFile(url=url,
+                                    fileName="dblp.xml",
+                                    targetDirectory=f"{home}/.dblp",
+                                    force=forceUpdate,
+                                    profile=True)
