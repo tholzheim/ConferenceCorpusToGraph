@@ -1,10 +1,10 @@
 import unittest
-from unittest import TestCase
 from py2neo import Graph
 from ccgraphmapper.cc2neo4j import ConfRef, DblpEvent
+from tests.basetest import Basetest
 
 
-class TestCc2neo4j(TestCase):
+class TestCc2neo4j(Basetest):
     """
     tests cc2neo4j graph mappers
     """
