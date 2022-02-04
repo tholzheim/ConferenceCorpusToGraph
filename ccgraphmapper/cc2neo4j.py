@@ -6,6 +6,10 @@ from corpus.event import EventStorage, Event
 from corpus.lookup import CorpusLookup, CorpusLookupConfigure
 
 class GraphMapper(object):
+	"""
+	Mapping functions to map records e.g. of events to a graph
+	interface class
+	"""
 	SOURCE_ID=NotImplemented
 	EVENT_LABEL=NotImplemented
 
@@ -13,10 +17,20 @@ class GraphMapper(object):
 		self.graph=graph
 		self.debug=debug
 
-	def addEventToGraph(self, event:Event):
-		return NotImplemented
+	def runQuery(self,query, *args, **kwargs):
+		"""
+		executes query and returns the result
+		if debug is True print stats
+		"""
+		qres = self.graph.run(query, *args, **kwargs)
+		if self.debug:
+			print(qres.stats())
+		return qres
 
 	def addEvent(self, event:Event):
+		"""
+		Add Event to the graph
+		"""
 		return NotImplemented
 
 	def addAllEvents(self, limit:int=None):
@@ -33,8 +47,6 @@ class GraphMapper(object):
 		total = len(events)
 		for event in alive_it(events):
 			qres = self.addEvent(event)
-			if self.debug:
-				print(qres.stats())
 
 
 	def getEvents(self):
@@ -55,7 +67,7 @@ class GraphMapper(object):
 		MERGE (c:City {{wikidataid:e.cityWikidataid}})
 		MERGE (e)-[:CITY]->(c)
 		"""
-		qres = self.graph.run(query)
+		qres = self.runQuery(query)
 		return qres
 
 
@@ -104,7 +116,7 @@ class ConfRef(GraphMapper):
 		"""
 		records=event.__dict__
 		params={"event":records}
-		qres = self.graph.run(query, params)
+		qres = self.runQuery(query, params)
 		return qres
 
 	def addAllRelations(self):
@@ -122,7 +134,7 @@ class ConfRef(GraphMapper):
 		MERGE (s:EventSeries:ConfRef {eventSeriesId:e.seriesId})
 		MERGE (e)-[:IN_EVENT_SERIES]->(s)
 		"""
-		qres = self.graph.run(query)
+		qres = self.runQuery(query)
 		return qres
 
 	def addDblpSeriesRelation(self):
@@ -139,7 +151,7 @@ class ConfRef(GraphMapper):
 		ON CREATE SET r.definedBy = [e.eventId]
 		ON MATCH SET r.definedBy = r.definedBy + e.eventId
 		"""
-		qres = self.graph.run(query)
+		qres = self.runQuery(query)
 		return qres
 
 
@@ -183,9 +195,6 @@ class DblpEvent(GraphMapper):
 		return samples
 
 	def addEvent(self, event:Event):
-		"""
-		{4711360|addEvent(self,event:Event)}
-		"""
 		query="""
 		MERGE (e:Event:DBLP {eventId:$event.eventId})
 		ON CREATE SET e = $event
@@ -193,7 +202,7 @@ class DblpEvent(GraphMapper):
 		"""
 		records=event.__dict__
 		params={"event":records}
-		qres = self.graph.run(query, params)
+		qres = self.runQuery(query, params)
 		return qres
 
 	def addSeriesRelation(self):
@@ -206,7 +215,7 @@ class DblpEvent(GraphMapper):
 		MERGE (s:EventSeries:DBLP {eventSeriesId:"conf/" + e.series})
 		MERGE (e)-[:IN_EVENT_SERIES]->(s)
 		"""
-		qres = self.graph.run(query)
+		qres = self.runQuery(query)
 		return qres
 
 

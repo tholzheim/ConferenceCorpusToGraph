@@ -13,17 +13,20 @@ class TestCc2neo4j(Basetest):
         """
         tests building the graph by adding entities and relations of different data sources
         """
+        debug=True
         graph = Graph("bolt://localhost:7687", auth=("", ""))
         confRef2Graph = ConfRef(graph=graph)
         confRef2Graph.addAllEvents(limit=1000)
-        print(confRef2Graph.addSeriesRelation().stats())
-        print(confRef2Graph.addLocationRelation().stats())
-        print(confRef2Graph.addDblpSeriesRelation().stats())
+        confRef2Graph.debug=debug # Show stats of added relations
+        confRef2Graph.addSeriesRelation()
+        confRef2Graph.addLocationRelation()
+        confRef2Graph.addDblpSeriesRelation()
 
         dblp2Graph = DblpEvent(graph=graph)
+        dblp2Graph.debug=debug # Show stats of added relations
         dblp2Graph.addAllEvents(limit=1000)
-        print(dblp2Graph.addLocationRelation().stats())
-        print(dblp2Graph.addSeriesRelation().stats())
+        dblp2Graph.addLocationRelation()
+        dblp2Graph.addSeriesRelation()
 
 
 if __name__ == '__main__':
