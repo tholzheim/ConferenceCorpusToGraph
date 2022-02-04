@@ -16,13 +16,13 @@ class TestCc2neo4j(Basetest):
         graph = Graph("bolt://localhost:7687", auth=("", ""))
         confRef2Graph = ConfRef(graph=graph)
         confRef2Graph.addAllEvents(limit=1000)
-        confRef2Graph.addSeriesRelation()
-        confRef2Graph.addLocationRelation()
-        confRef2Graph.addDblpSeriesRelation()
+        print(confRef2Graph.addSeriesRelation().stats())
+        print(confRef2Graph.addLocationRelation().stats())
+        print(confRef2Graph.addDblpSeriesRelation().stats())
 
         dblp2Graph = DblpEvent(graph=graph)
         dblp2Graph.addAllEvents(limit=1000)
-        dblp2Graph.addLocationRelation()
+        print(dblp2Graph.addLocationRelation().stats())
         print(dblp2Graph.addSeriesRelation().stats())
 
 

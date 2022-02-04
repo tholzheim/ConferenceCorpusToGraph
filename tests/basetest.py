@@ -169,6 +169,6 @@ class RawDataSources:
                                     fileName="dblp.xml",
                                     targetDirectory=f"{home}/.dblp",
                                     force=forceUpdate,
-                                    profile=True)
+                                    profile=debug)
         if debug:
             print(output)
