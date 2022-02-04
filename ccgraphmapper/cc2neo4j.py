@@ -170,7 +170,7 @@ class ConfRef(GraphMapper):
 		WHERE e.dblpSeriesId IS NOT NULL
 		MATCH (e)-[:IN_EVENT_SERIES]->(s:EventSeries:ConfRef)
 		MERGE (sd:EventSeries:DBLP {eventSeriesId:e.dblpSeriesId})
-		MERGE (s)-[r:SAME_AS]-(sd)
+		MERGE (s)-[r:MAYBE_SAME_AS]-(sd)
 		ON CREATE SET r.definedBy = [e.eventId]
 		ON MATCH SET r.definedBy = r.definedBy + e.eventId
 		"""
