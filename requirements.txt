@@ -3,3 +3,5 @@ lxml
 py2neo
 alive_progress
 BeautifulSoup4
+# https://github.com/somnathrakshit/geograpy3
+geograpy3~=0.2.1
